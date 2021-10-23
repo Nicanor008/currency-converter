@@ -19,7 +19,10 @@ import Loader from "../components/Loader"
 export const HomePAge = () => {
     const currency = useSelector((state: any) => state.currencyList);
     const dispatch = useDispatch();
-    const [inputValue, setInputValue] = useState<any>({});
+    const [inputValue, setInputValue] = useState<any>({
+        baseCurrency: 'EUR',
+        newCurrency: 'KES'
+    });
 
     /**
      * Fetch Assets, Applications and Users on first load
@@ -30,15 +33,16 @@ export const HomePAge = () => {
     }, [dispatch])
 
     // Get individual currency details
-    const tt = currency?.items?.currencies &&
-        Object.keys(currency?.items?.currencies).map((tr: string) => (
-            <option value={tr} key={tr}>
-                {tr} - {currency?.items?.currencies[tr]}
+    const currencyItems = currency?.items?.currencies &&
+        Object.keys(currency?.items?.currencies).map((item: string) => (
+            <option value={item} key={item}>
+                {item} - {currency?.items?.currencies[item]}
             </option>
         ));
 
     const onChangeHandler = (e: any) => {
         setInputValue({ ...inputValue, [e.target.name]: e.target.value });
+        // convert currency on changing the previously selected currency
         e.target.type === "select-one" && inputValue?.currency && dispatch(currencyActions.convertCurrency(inputValue));
     }
 
@@ -46,7 +50,17 @@ export const HomePAge = () => {
     const convertToNumber = (num: string) => (
         Number(num).toFixed(2)
     )
-    console.log('%chome.tsx line:47 currency', 'color: #007acc;', currency);
+
+    const swapInputValues = () => {
+        setInputValue({
+            ...inputValue,
+            baseCurrency: inputValue.newCurrency,
+            newCurrency: inputValue.baseCurrency,
+        })
+        dispatch(currencyActions.convertCurrency({...inputValue,
+            baseCurrency: inputValue.newCurrency,
+            newCurrency: inputValue.baseCurrency}))
+    }
 
     return (
         <Box>
@@ -90,12 +104,27 @@ export const HomePAge = () => {
                                         border="1px solid"
                                         placeholder="$1"
                                         onChange={onChangeHandler}
+                                        mr={6}
                                     />
-                                    <Select name="baseCurrency" placeholder='EUR' onChange={onChangeHandler}>
-                                        {tt}
+                                    <Select
+                                        name="baseCurrency"
+                                        placeholder='EUR - Euro'
+                                        onChange={onChangeHandler}
+                                        value={inputValue?.baseCurrency}
+                                        mr={3}
+                                    >
+                                        {currencyItems}
                                     </Select>
-                                    <Select name="newCurrency" placeholder="KSH" onChange={onChangeHandler}>
-                                        {tt}
+                                    <Button onClick={swapInputValues}>Swap</Button>
+                                    <Select
+                                        name="newCurrency"
+                                        placeholder="KES - Kenyan Shilling"
+                                        onChange={onChangeHandler}
+                                        value={inputValue?.newCurrency}
+                                        // defaultValue={inputValue?.newCurrency}
+                                        ml={3}
+                                    >
+                                        {currencyItems}
                                     </Select>
                                 </Flex>
                                 <Button
