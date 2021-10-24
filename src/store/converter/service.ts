@@ -1,16 +1,15 @@
 import axios from "axios";
-// import { Base_API_URL, API_KEY } from "../../constants";
+import { Base_API_URL, API_KEY } from "../../constants";
 
 async function getCurrencyListService() {
-    const res = await axios.get(`https://api.getgeoapi.com/v2/currency/list?api_key=1e15f225b198772d5bab9b02791f1646c3a310fc`);
+    console.log('%cservice.ts line:5', 'color: #007acc;', Base_API_URL);
+    const res = await axios.get(`${Base_API_URL}list?api_key=${API_KEY}`);
     return handleResponse(res);
-    // return axios.get(`${Base_API_URL}/list?api_key=${API_KEY}`).then(handleResponse);
 }
 
 async function convertCurrency(inputValue: any) {
-    const res = await axios.get(`https://api.getgeoapi.com/v2/currency/convert?api_key=1e15f225b198772d5bab9b02791f1646c3a310fc&from=${inputValue?.baseCurrency}&to=${inputValue?.newCurrency}&amount=${inputValue?.currency}`)
+    const res = await axios.get(`${Base_API_URL}convert?api_key=${API_KEY}&from=${inputValue?.baseCurrency}&to=${inputValue?.newCurrency}&amount=${inputValue?.currency}`)
     return handleResponse(res);
-    // return axios.get(`${Base_API_URL}/list?api_key=${API_KEY}`).then(handleResponse);
 }
 
 export function handleResponse(res: { status?: number; data?: any; response?: any; }) {
