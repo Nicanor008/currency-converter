@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 // import { ColorModeSwitcher } from '../ColorModeSwitcher'
 
 export const Navbar: React.FC = () => (
-  <Container maxW="container.xl" display="flex" justifyContent="space-between">
+  <Container maxW="container.xl" display="flex" justifyContent="space-between" pt="10px">
     <NavLink to="/" className="brand-logo">
       Currency Exchanger
     </NavLink>
